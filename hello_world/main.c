@@ -1,6 +1,11 @@
-# 0 "main.c"
-# 0 "<built-in>"
-# 0 "<command-line>"
-# 1 "/usr/include/stdc-predef.h" 1 3 4
-# 0 "<command-line>" 2
-# 1 "main.c"
+#include <stdio.h>
+
+/**
+ * main - Entry point
+ *
+ * Return: Always 0 (Success)
+ */
+int main(void)
+{
+    return (0);
+}
