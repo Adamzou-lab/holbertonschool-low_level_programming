@@ -23,6 +23,17 @@ double soustraction(double a, double b)
 	return (a - b);
 }
 /**
+ * multiplication - Multiplies two numbers.
+ * @a: First number.
+ * @b: Second number.
+ *
+ * Return: Product of a and b.
+ */
+double multiplication(double a, double b)
+{
+	return (a * b);
+}
+/**
  * main - Entry point for the calculator.
  *
  * Return: Always 0.
@@ -56,6 +67,9 @@ int main(void)
 				break;
 			case 2:
 				res = soustraction(n1, n2);
+				break;
+			case 3:
+				res = multiplication(n1, n2);
 				break;
 			}
 			printf("Result: %g\n", res);
