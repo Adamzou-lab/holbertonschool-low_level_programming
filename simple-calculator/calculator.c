@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <stdlib.h>
 /**
  * addition - Adds two numbers.
  * @a: First number.
@@ -11,43 +12,56 @@ double addition(double a, double b)
 	return (a + b);
 }
 /**
- * main - Entry point for the calculator (Stage 3: Addition)
+ * soustraction - Subtracts b from a.
+ * @a: First number.
+ * @b: Second number.
+ *
+ * Return: Difference of a and b.
+ */
+double soustraction(double a, double b)
+{
+	return (a - b);
+}
+/**
+ * main - Entry point for the calculator.
  *
  * Return: Always 0.
  */
 int main(void)
 {
-	int choixOperation = -1;
-	double nombre1, nombre2, resultat;
+	double n1 = 0, n2 = 0, res = 0;
+	int choice = -1;
 
-	while (choixOperation != 0)
+	while (choice != 0)
 	{
-		printf("Simple Calculator\n");
-		printf("1) Add\n2) Subtract\n3) Multiply\n4) Divide\n0) Quit\n");
-		printf("Choice: ");
-
-		if (scanf("%d", &choixOperation) != 1)
+		printf("Simple Calculator\n1) Add\n2) Subtract\n");
+		printf("3) Multiply\n4) Divide\n0) Quit\nChoice: ");
+		if (scanf("%d", &choice) != 1)
 			break;
-
-		if (choixOperation == 0)
+		if (choice == 0)
 		{
 			printf("Bye!\n");
 			break;
 		}
-
-		if (choixOperation == 1)
+		if (choice >= 1 && choice <= 4)
 		{
 			printf("A: ");
-			scanf("%lf", &nombre1);
+			scanf("%lf", &n1);
 			printf("B: ");
-			scanf("%lf", &nombre2);
-			resultat = addition(nombre1, nombre2);
-			printf("Result: %g\n", resultat);
+			scanf("%lf", &n2);
+			switch (choice)
+			{
+			case 1:
+				res = addition(n1, n2);
+				break;
+			case 2:
+				res = soustraction(n1, n2);
+				break;
+			}
+			printf("Result: %g\n", res);
 		}
-		else if (choixOperation < 0 || choixOperation > 4)
-		{
+		else
 			printf("Invalid choice");
-		}
 	}
 	return (0);
 }
