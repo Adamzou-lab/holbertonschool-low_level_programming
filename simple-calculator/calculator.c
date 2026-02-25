@@ -1,8 +1,8 @@
 #include <stdio.h>
 /**
- * main - Entry point for the calculator (Stage 1: Menu and Exit)
+ * main - Entry point for the calculator (Stage 2: Loop and Validation)
  *
- * Return: Always 0 (Success)
+ * Return: Always 0.
  */
 int main(void)
 {
@@ -25,6 +25,11 @@ int main(void)
 		{
 			printf("Bye!\n");
 			break;
+		}
+
+		if (choixOperation < 0 || choixOperation > 4)
+		{
+			printf("Invalid choice");
 		}
 	}
 	return (0);
