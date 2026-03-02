@@ -78,10 +78,10 @@ int main(void)
         printf("impossible\n");
 
 
-    printf("TOTAL seconds: %.6f\n", (double)(end_total - start_total) / (double)CLOCKS_PER_SEC);
-    printf("BUILD_DATA seconds: %.6f\n", (double)(e_build - s_build) / (double)CLOCKS_PER_SEC);
-    printf("PROCESS seconds: %.6f\n", (double)(e_process - s_process) / (double)CLOCKS_PER_SEC);
-    printf("REDUCE seconds: %.6f\n", (double)(e_reduce - s_reduce) / (double)CLOCKS_PER_SEC);
+    printf("TOTAL seconds: %.6f\n", (double)(end_total - start_total) / CLOCKS_PER_SEC);
+    printf("BUILD_DATA seconds: %.6f\n", (double)(e_build - s_build) / CLOCKS_PER_SEC);
+    printf("PROCESS seconds: %.6f\n", (double)(e_process - s_process) / CLOCKS_PER_SEC);
+    printf("REDUCE seconds: %.6f\n", (double)(e_reduce - s_reduce) / CLOCKS_PER_SEC);
     
 
     return 0;
