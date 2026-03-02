@@ -1,0 +1,24 @@
+#include "main.h"
+/**
+ * puts2 - Prints every other character of a string, starting with the first.
+ * @str: Pointer to the string to be printed.
+ *
+ * Description: Iterates through the string and uses _putchar to
+ * print only the characters at even indices, followed by a new line.
+ *
+ * Return: Nothing.
+ */
+void puts2(char *str)
+{
+	int len = 0;
+
+	while (str[len] != '\0')
+	{
+		if (len % 2 == 0)
+		{
+			_putchar(str[len]);
+		}
+		len++;
+	}
+	_putchar('\n');
+}
