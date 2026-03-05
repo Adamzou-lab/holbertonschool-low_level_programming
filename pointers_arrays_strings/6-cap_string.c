@@ -9,30 +9,30 @@
  *
  * Return: Pointer to the modified string s.
  */
-char *cap_string(char *s)
+char *cap_string(char *str)
 {
 	int i = 0;
 	int j;
 	int separateur = 1;
 	char *sep = " \t\n,;.!?\"(){}";
 
-	while (s[i] != '\0')
+	while (str[i] != '\0')
 	{
 		j = 0;
-		while (sep[j] != '\0' && s[i] != sep[j])
+		while (sep[j] != '\0' && str[i] != sep[j])
 			j++;
 		if (sep[j] != '\0')
 			separateur = 1;
-		else if (s[i] >= 'a' && s[i] <= 'z' && separateur == 1)
+		else if (str[i] >= 'a' && str[i] <= 'z' && separateur == 1)
 		{
-			s[i] -= 32;
+			str[i] -= 32;
 			separateur = 0;
 		}
-		else if (s[i] >= 'A' && s[i] <= 'Z' && separateur == 0)
-			s[i] += 32;
+		else if (str[i] >= 'A' && str[i] <= 'Z' && separateur == 0)
+			str[i] += 32;
 		else
 			separateur = 0;
 		i++;
 	}
-	return (s);
+	return (str);
 }
