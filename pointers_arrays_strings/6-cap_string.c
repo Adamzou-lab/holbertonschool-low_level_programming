@@ -1,37 +1,37 @@
 #include "main.h"
 /**
- * cap_string - Met en majuscule la première lettre de chaque mot.
- * @str: La chaîne de caractères à modifier.
+ * cap_string - Capitalizes all words of a string.
+ * @str: The string to be modified.
  *
- * Return: Un pointeur vers la chaîne modifiée.
+ * Description: Scans the string and capitalizes the first letter
+ * of every word. Words are delimited by a specific set of separators:
+ * space, tabulation, new line, ,, ;, ., !, ?, ", (, ), {, and }.
+ *
+ * Return: Pointer to the modified string s.
  */
 char *cap_string(char *str)
 {
 	int i = 0;
 	int j;
-	char sep[] = " \t\n,;.!?\"(){}";
+	int separateur = 1;
+	char *sep = " \t\n,;.!?\"(){}";
 
 	while (str[i] != '\0')
 	{
-		/* Cas particulier : le tout premier caractère de la chaîne */
-		if (i == 0 && (str[i] >= 'a' && str[i] <= 'z'))
+		j = 0;
+		while (sep[j] != '\0' && str[i] != sep[j])
+			j++;
+		if (sep[j] != '\0')
+			separateur = 1;
+		else if (str[i] >= 'a' && str[i] <= 'z' && separateur == 1)
 		{
 			str[i] -= 32;
+			separateur = 0;
 		}
-
-		/* Parcourir la liste des séparateurs */
-		for (j = 0; sep[j] != '\0'; j++)
-		{
-			/* Si le caractère précédent est un séparateur */
-			if (str[i] == sep[j])
-			{
-				/* Et si le caractère actuel est une minuscule */
-				if (str[i + 1] >= 'a' && str[i + 1] <= 'z')
-				{
-					str[i + 1] -= 32;
-				}
-			}
-		}
+		else if (str[i] >= 'A' && str[i] <= 'Z' && separateur == 0)
+			str[i] += 32;
+		else
+			separateur = 0;
 		i++;
 	}
 	return (str);
