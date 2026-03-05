@@ -14,7 +14,7 @@ int _atoi(char *s)
 {
 	int i = 0;
 	int signe = 1;
-	int resultat = 0;
+	unsigned int resultat = 0;
 	int chiffre = 0;
 
 	while (s[i] != '\0')
@@ -34,12 +34,12 @@ int _atoi(char *s)
 		{
 			i++;
 		}
+		else if (chiffre == 1)
+		{
+			break;
+		}
 		else
 		{
-			if (chiffre == 1)
-			{
-				break;
-			}
 			i++;
 		}
 	}
