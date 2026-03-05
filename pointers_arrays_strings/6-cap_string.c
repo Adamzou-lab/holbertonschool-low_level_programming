@@ -1,7 +1,7 @@
 #include "main.h"
 /**
  * cap_string - Capitalizes all words of a string.
- * @s: The string to be modified.
+ * @str: The string to be modified.
  *
  * Description: Scans the string and capitalizes the first letter
  * of every word. Words are delimited by a specific set of separators:
