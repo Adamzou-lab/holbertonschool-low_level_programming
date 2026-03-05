@@ -25,12 +25,12 @@ int _atoi(char *s)
 			chiffre = 1;
 			i++;
 		}
-		else if (s[i] == '-')
+		else if (s[i] == '-' && chiffre == 0)
 		{
 			signe = signe * -1;
 			i++;
 		}
-		else if (s[i] == '+')
+		else if (s[i] == '+' && chiffre == 0)
 		{
 			i++;
 		}
