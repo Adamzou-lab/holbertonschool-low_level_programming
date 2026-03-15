@@ -8,7 +8,7 @@
  * Description: The array contains all the values from min to max,
  * ordered from min to max. If min > max, return NULL.
  *
- * Return: The pointer to the newly created array, 
+ * Return: The pointer to the newly created array,
  * or NULL if it fails or if min > max.
  */
 int *array_range(int min, int max)
