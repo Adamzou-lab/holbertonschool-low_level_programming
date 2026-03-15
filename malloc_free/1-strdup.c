@@ -25,7 +25,7 @@ char *_strdup(char *str)
 	}
 
 	tab = malloc((i + 1) * sizeof(char));
-	
+
 	if (tab == NULL)
 		return (NULL);
 
