@@ -5,7 +5,7 @@
  * @grid: The 2D array of integers to be freed.
  * @height: The height of the grid.
  *
- * Description: First frees each individual row of the grid, 
+ * Description: First frees each individual row of the grid,
  * then frees the main pointer.
  *
  * Return: Nothing.
@@ -14,7 +14,7 @@ void free_grid(int **grid, int height)
 {
 	int i = 0;
 
-	if (grid == NULL || height <=0)
+	if (grid == NULL || height <= 0)
 	{
 		return;
 	}
