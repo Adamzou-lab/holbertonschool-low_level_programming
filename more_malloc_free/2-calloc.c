@@ -19,7 +19,7 @@ void *_calloc(unsigned int nmemb, unsigned int size)
 	if (nmemb == 0 || size == 0)
 		return (NULL);
 
-	tab = malloc((nmemb * size) * sizeof(unsigned int));
+	tab = malloc(nmemb * size);
 	if (tab == NULL)
 		return (NULL);
 
