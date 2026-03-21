@@ -3,7 +3,7 @@
  * _pow_recursion - Computes x raised to the power of y
  * @x: First integer
  * @y: Second integer
- * 
+ *
  * Return: The value of x raised to the power of y, or -1 if y is negative
  */
 int _pow_recursion(int x, int y)
