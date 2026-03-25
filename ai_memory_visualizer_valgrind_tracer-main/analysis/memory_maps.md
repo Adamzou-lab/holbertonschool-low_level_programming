@@ -4,11 +4,11 @@
 
 ### Variables and memory zones
 
-| Variable    | Zone  | Size    | Lifetime              |
-|-------------|-------|---------|-----------------------|
-| local_int   | stack | 4 bytes | duration of dump_frame call |
-| local_buf   | stack | 16 bytes| duration of dump_frame call |
-| p_local     | stack | 8 bytes | duration of dump_frame call |
+| Variable    | Zone  | Size     | Lifetime                                          |
+|-------------|-------|----------|---------------------------------------------------|
+| local_int   | stack | 4 bytes  | created on dump_frame entry, destroyed on return  |
+| local_buf   | stack | 16 bytes | created on dump_frame entry, destroyed on return  |
+| p_local     | stack | 8 bytes  | created on dump_frame entry, destroyed on return  |
 
 ### Stack growth observation
 
@@ -26,7 +26,9 @@ Modifying *p_local modifies local_int directly.
 ### AI correction
 
 **What AI said:** "At depth=0, local_int is allocated on the heap because it is passed as a parameter to dump_frame. Its address 0x7ffdc1c90184 persists after the function returns, meaning it can safely be accessed later."
-**Why it was wrong:** It says that it's allocated on the heap and that the adress persists after the function returns.
+**Why it was wrong:** **Why it was wrong:** local_int is a local variable — no malloc 
+means no heap. Stack variables are destroyed when their function 
+returns. Accessing them after is undefined behavior.
 **Correction:** It can't be allocated on the heap because there is no malloc, and the adress cannot persists because it's on the stack, you can't re-use it after a return or it's called a use after free.
 
 ## 2. heap_example.c
