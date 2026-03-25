@@ -23,6 +23,39 @@ Address decreased by 0x30 between calls.
 p_local and local_int share the same address: 0x7ffdc1c90184
 Modifying *p_local modifies local_int directly.
 
+### Step-by-step memory map
+
+#### Step 1 — main() calls walk_stack(0, 3)
+Stack:
+  [main frame]
+  [walk_stack depth=0] marker=0 @ 0x7ffdc1c901d4
+
+#### Step 2 — walk_stack calls dump_frame("enter", 0)
+Stack:
+  [main frame]
+  [walk_stack depth=0] marker=0 @ 0x7ffdc1c901d4
+  [dump_frame depth=0] local_int=100 @ 0x7ffdc1c90184
+                       local_buf    @ 0x7ffdc1c90190
+                       p_local      = 0x7ffdc1c90184 ← alias!
+
+#### Step 3 — dump_frame returns
+  dump_frame frame destroyed — local_int, local_buf, p_local invalid.
+  walk_stack(0) frame still active — marker still valid.
+
+#### Step 4 — Recursion peaks at depth=3
+Stack:
+  [main frame]
+  [walk_stack depth=0] marker=0  @ 0x7ffdc1c901d4
+  [walk_stack depth=1] marker=10 @ 0x7ffdc1c901a4
+  [walk_stack depth=2] marker=20 @ 0x7ffdc1c90174
+  [walk_stack depth=3] marker=30 @ 0x7ffdc1c90144
+
+#### Step 5 — Unwinding
+  depth=3 returns → frame popped, marker @ 0x7ffdc1c90144 invalid
+  depth=2 resumes → marker @ 0x7ffdc1c90174 still valid
+  depth=1 resumes → marker @ 0x7ffdc1c901a4 still valid
+  depth=0 resumes → marker @ 0x7ffdc1c901d4 still valid
+
 ### AI correction
 
 **What AI said:** "At depth=0, local_int is allocated on the heap because it is passed as a parameter to dump_frame. Its address 0x7ffdc1c90184 persists after the function returns, meaning it can safely be accessed later."
@@ -51,6 +84,32 @@ returns. Accessing them after is undefined behavior.
 free(alice) destroys the struct at 0x562fa39bd6b0.
 The only pointer to alice->name (0x562fa39bd6d0) was inside that struct.
 Once the struct is freed, alice->name is permanently unreachable — leaked.
+
+### Step-by-step memory map
+
+#### Step 1 — After person_new("Alice", 30)
+Heap:
+  alice struct @ 0x562fa39bd6b0  (age=30, name ptr inside)
+  alice->name  @ 0x562fa39bd6d0  ("Alice\0" — 6 bytes)
+
+#### Step 2 — After person_new("Bob", 41)
+Heap:
+  alice struct @ 0x562fa39bd6b0  LIVE
+  alice->name  @ 0x562fa39bd6d0  LIVE
+  bob struct   @ 0x562fa39bd6f0  LIVE
+  bob->name    @ 0x562fa39bd710  LIVE
+
+#### Step 3 — free(bob->name) then free(bob)
+Heap:
+  alice struct @ 0x562fa39bd6b0  LIVE
+  alice->name  @ 0x562fa39bd6d0  LIVE
+  bob->name    @ 0x562fa39bd710  FREED
+  bob struct   @ 0x562fa39bd6f0  FREED
+
+#### Step 4 — person_free_partial(alice)
+Heap:
+  alice struct @ 0x562fa39bd6b0  FREED
+  alice->name  @ 0x562fa39bd6d0  LEAKED — unreachable
 
 ### Memory leak analysis
 person_free_partial() only frees the Person struct.
@@ -84,6 +143,29 @@ Proof from output:
 free() does not zero memory. The allocator writes internal bookkeeping
 data into freed blocks. b[2] returns garbage because the allocator
 has already modified the freed block's contents.
+
+### Step-by-step memory map
+
+#### Step 1 — make_numbers(5) returns
+Stack:  a = 0x5f97e64046b0
+Heap:   int[5] @ 0x5f97e64046b0 = {0, 11, 22, 33, 44}
+
+#### Step 2 — b = a
+Stack:  a = 0x5f97e64046b0
+        b = 0x5f97e64046b0  ← same block, two aliases
+Heap:   int[5] @ 0x5f97e64046b0  LIVE
+
+#### Step 3 — free(a)
+Stack:  a = 0x5f97e64046b0  ← dangling
+        b = 0x5f97e64046b0  ← dangling
+Heap:   int[5] @ 0x5f97e64046b0  FREED
+
+#### Step 4 — b[2] read (use-after-free)
+  b[2] returns -1242486022 — allocator metadata, not 22
+  Reading freed memory — undefined behavior
+
+#### Step 5 — b[3] = 1234 (use-after-free write)
+  Corrupts allocator metadata — undefined behavior
 
 ### Use after free analysis
 After free(a), b becomes a dangling pointer.
@@ -123,6 +205,21 @@ Valgrind proof:
 still reachable: 1,024 bytes in 1 blocks
 This is not a leak from our code — it comes from the libc
 which did not have time to clean up because the program crashed.
+
+### Step-by-step memory map
+
+#### Step 1 — main() calls allocate_numbers(0)
+Stack:  n = 0
+        nums = NULL (not yet assigned)
+
+#### Step 2 — allocate_numbers returns NULL
+  n <= 0 — early return, malloc never called.
+Stack:  nums = NULL
+
+#### Step 3 — nums[0] = 42 (NULL dereference)
+  nums is NULL — address 0x0 is not mapped.
+  OS raises SIGSEGV — program terminated.
+  free(nums) is never reached.
 
 ### AI correction
 **What AI said:** "The segfault happens because nums array is too small. Allocating more memory would fix the problem."
