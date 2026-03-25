@@ -1,5 +1,12 @@
 # Memory Maps Analysis
 
+## Table of Contents
+1. [stack_example.c](#1-stack_examplec)
+2. [heap_example.c](#2-heap_examplec)
+3. [aliasing_example.c](#3-aliasing_examplec)
+4. [crash_example.c](#4-crash_examplec)
+5. [AI Error Documentation](#5-ai-error-documentation)
+
 ## stack_example.c
 
 ### Variables and memory zones
