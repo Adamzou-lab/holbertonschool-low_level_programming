@@ -41,6 +41,17 @@ returns. Accessing them after is undefined behavior.
 | malloc(sizeof(Person)) bob   | 16 bytes | ✅                |
 | malloc(len + 1) bob->name    | 4 bytes  | ✅                |
 
+### Real addresses collected at runtime
+- alice struct  @ 0x562fa39bd6b0
+- alice->name   @ 0x562fa39bd6d0
+- bob struct    @ 0x562fa39bd6f0
+- bob->name     @ 0x562fa39bd710
+
+### Why free order matters
+free(alice) destroys the struct at 0x562fa39bd6b0.
+The only pointer to alice->name (0x562fa39bd6d0) was inside that struct.
+Once the struct is freed, alice->name is permanently unreachable — leaked.
+
 ### Memory leak analysis
 person_free_partial() only frees the Person struct.
 p->name is a separate heap allocation — it is not freed automatically.
@@ -63,6 +74,16 @@ Valgrind proof:
 a and b point to the same heap block allocated by make_numbers().
 Proof from output:
 - a=0x4a76480 b=0x4a76480 (identical addresses)
+
+### Real addresses collected at runtime
+- a=0x5f97e64046b0 b=0x5f97e64046b0 (identical — alias confirmed)
+- After free(a): b[2]=-1242486022 (allocator overwrote the freed block)
+- The value -1242486022 is allocator metadata reinterpreted as int
+
+### Why b[2] is not 22 after free
+free() does not zero memory. The allocator writes internal bookkeeping
+data into freed blocks. b[2] returns garbage because the allocator
+has already modified the freed block's contents.
 
 ### Use after free analysis
 After free(a), b becomes a dangling pointer.
