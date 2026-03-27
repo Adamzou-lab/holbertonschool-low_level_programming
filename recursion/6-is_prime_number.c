@@ -1,29 +1,31 @@
 #include "main.h"
 /**
- * is_prime_helper - recursive helper to check divisibility
- * @n: the number to check
- * @div: current divisor
- *
- * Return: 1 if no divisor found (prime), 0 otherwise
- */
-static int is_prime_helper(int n, int div)
+* is_prime_helper - checks if a number is prime using trial division
+* @n: number to check
+* @i: current divisor to check
+* Return: 1 if n is prime, 0 otherwise
+*/
+int is_prime_helper(int n, int i)
 {
-	if (div * div > n)
+	if (i * i > n)
 		return (1);
-	if (n % div == 0)
+	if (n % i == 0 || n % (i + 2) == 0)
 		return (0);
-	return (is_prime_helper(n, div + 1));
+	return (is_prime_helper(n, i + 6));
 }
-
 /**
- * is_prime_number - checks if a number is prime
- * @n: integer to check
- *
- * Return: 1 if prime, 0 otherwise
- */
+* is_prime_number - checks if a number is prime
+* @n: number to check
+*
+* Return: 1 if n is prime, 0 otherwise
+*/
 int is_prime_number(int n)
 {
-	if (n < 2)
+	if (n <= 1)
 		return (0);
-	return (is_prime_helper(n, 2));
+	if (n <= 3)
+		return (1);
+	if (n % 2 == 0 || n % 3 == 0)
+		return (0);
+	return (is_prime_helper(n, 5));
 }
