@@ -26,6 +26,8 @@ dlistint_t *insert_dnodeint_at_index(dlistint_t **h, unsigned int idx, int n)
 	{
 		if (count == idx)
 		{
+			if (current->next == NULL)  /* si on est au dernier node */
+				return (add_dnodeint_end(h, n));  /* utiliser add_dnodeint_end */
 			new->n = n;
 			new->prev = current->prev;
 			new->next = current;
