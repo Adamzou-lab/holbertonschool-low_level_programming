@@ -3,6 +3,36 @@
 #include "hash_tables.h"
 
 /**
+ * create_node - Allocates and initializes a new hash node
+ * @key: The key string
+ * @value: The value string
+ *
+ * Return: Pointer to the new node, or NULL on failure
+ */
+static hash_node_t *create_node(const char *key, const char *value)
+{
+	hash_node_t *node;
+
+	node = malloc(sizeof(hash_node_t));
+	if (node == NULL)
+		return (NULL);
+	node->key = strdup(key);
+	if (node->key == NULL)
+	{
+		free(node);
+		return (NULL);
+	}
+	node->value = strdup(value);
+	if (node->value == NULL)
+	{
+		free(node->key);
+		free(node);
+		return (NULL);
+	}
+	return (node);
+}
+
+/**
  * hash_table_set - Adds or updates an element in the hash table
  * @ht: The hash table
  * @key: The key (cannot be empty)
@@ -32,24 +62,9 @@ int hash_table_set(hash_table_t *ht, const char *key, const char *value)
 		node = node->next;
 	}
 
-	node = malloc(sizeof(hash_node_t));
+	node = create_node(key, value);
 	if (node == NULL)
 		return (0);
-
-	node->key = strdup(key);
-	if (node->key == NULL)
-	{
-		free(node);
-		return (0);
-	}
-
-	node->value = strdup(value);
-	if (node->value == NULL)
-	{
-		free(node->key);
-		free(node);
-		return (0);
-	}
 
 	node->next = ht->array[index];
 	ht->array[index] = node;
