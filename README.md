@@ -42,4 +42,4 @@ gcc -Wall -Werror -Wextra -pedantic -std=gnu89 *.c -o programme
 
 ## Auteur
 
-Adam (Adamzou-lab), Holberton School.
+Adam (Adamzou-lab).
